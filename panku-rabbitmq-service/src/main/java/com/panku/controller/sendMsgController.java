@@ -57,15 +57,15 @@ public class sendMsgController {
      * @param message
      * @param delayedTime
      */
-//    @GetMapping("/sendDelayMsg/{message}/{delayedTime}")
-//    public void sendMsgForDelayed(@PathVariable String message, @PathVariable Integer delayedTime){
-//        log.info("{}: 发送 【{}】消息给用户，设置延迟时间{}ms" , new Date().toString(),message, delayedTime);
-//        //交换机、routingkey、消息体
-//        rabbitTemplate.convertAndSend(DelayQueueConfig.DELAY_EXCHANGE,DelayQueueConfig.DELAY_KEY, "来自Delayed队列消息-" + message, msg->{
-//            //设置发送消息时长
-//            msg.getMessageProperties().setDelay(delayedTime);
-//            return msg;
-//        });
-//    }
+    @GetMapping("/sendDelayMsg/{message}/{delayedTime}")
+    public void sendMsgForDelayed(@PathVariable String message, @PathVariable Integer delayedTime){
+        log.info("{}: 发送 【{}】消息给用户，设置延迟时间{}ms" , new Date().toString(),message, delayedTime);
+        //交换机、routingkey、消息体
+        rabbitTemplate.convertAndSend(DelayQueueConfig.DELAY_EXCHANGE,DelayQueueConfig.DELAY_KEY, "来自Delayed队列消息-" + message, msg->{
+            //设置发送消息时长
+            msg.getMessageProperties().setDelay(delayedTime);
+            return msg;
+        });
+    }
 
 }

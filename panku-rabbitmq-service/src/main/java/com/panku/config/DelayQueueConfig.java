@@ -37,7 +37,7 @@ public class DelayQueueConfig {
     @Bean
     public CustomExchange delayExchange() {
         Map<String,Object> arguments = new HashMap<>();
-        arguments.put("x-delayed-message", BuiltinExchangeType.DIRECT);
+        arguments.put("x-delayed-type", BuiltinExchangeType.DIRECT.getType());
         /**
          * 1.交换机的名称
          * 2.交换机的类型

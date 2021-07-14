@@ -16,11 +16,11 @@ import java.util.Date;
 @Component
 public class DelayedQueueConsumer {
 
-//    //接收消息
-//    @RabbitListener(queues = "delayed.queue")
-//    public void receiveDelayed(Message message){
-//        String messages = new String(message.getBody());
-//        log.info("当前时间：{} 收到延迟队列生产者的消息：【{}】。", new Date().toString(), messages);
-//    }
+    //接收消息
+    @RabbitListener(queues = "delayed.queue")
+    public void receiveDelayed(Message message){
+        String messages = new String(message.getBody());
+        log.info("当前时间：{} 收到延迟队列生产者的消息：【{}】。", new Date().toString(), messages);
+    }
 
 }
