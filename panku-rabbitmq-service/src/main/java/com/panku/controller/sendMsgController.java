@@ -1,7 +1,9 @@
 package com.panku.controller;
 
+import com.panku.config.ConfirmConfig;
 import com.panku.config.DelayQueueConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,7 +19,7 @@ import java.util.Date;
  */
 @Slf4j
 @RestController
-@RequestMapping("/ttl")
+@RequestMapping("/send")
 public class sendMsgController {
 
     @Resource
@@ -68,4 +70,28 @@ public class sendMsgController {
         });
     }
 
+    /**
+     * 发布确认消息
+     * @param message
+     */
+    @GetMapping("/sendConfirm/{message}")
+    public void sendConfirmMsg(@PathVariable String message){
+        rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME, ConfirmConfig.CONFIRM_ROUTING_KEY, message);
+        log.info("发送消息内容为【】" + message);
+    }
+
+    /**
+     * 异常情况下 消息的回退 及 回调
+     * @param message
+     */
+    @GetMapping("/sendConfirmCall/{message}")
+    public void sendConfirmCall(@PathVariable String message){
+        CorrelationData correlationData = new CorrelationData("1");
+        rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME, ConfirmConfig.CONFIRM_ROUTING_KEY, message+ "-1", correlationData);
+        log.info("回调-->发送消息内容【{}】", message + "-1");
+
+        CorrelationData correlationData2 = new CorrelationData("2");
+        rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME, ConfirmConfig.CONFIRM_ROUTING_KEY + "WQE", message+ "-2", correlationData2);
+        log.info("回调-->发送消息内容【{}】", message+ "-2");
+    }
 }
